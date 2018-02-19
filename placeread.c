@@ -8,12 +8,13 @@ typedef float latitude;
 
 typedef float longitude;
 
-typedef struct placeNode {
-	char *city[255];
-	char *state[2];
+//typedef struct Placenode node;
+struct Placenode {
+	char* city;
+	char* state;
 	latitude lat;
 	longitude lon;
-} placeNode;
+};
 
 
 void trimCity(char *city){
@@ -42,31 +43,40 @@ char city[63];
 char locationtemp[9];
 latitude lat;
 longitude lon;
-placeNode * start;
-while(1){
-	//struct placeNode * newNode = (struct placeNode*)malloc(sizeof(struct placeNode));
-	//check node was created successfully if fail
+//placeNode * start = head;
 
+while(1){
+	struct Placenode * newNode = (struct Placenode*)malloc(sizeof(struct Placenode));
+	//check node was created successfully if fail
+	
 	if (fgets(line,200,fp)==NULL) break;
+	
 	//get the state
 	strncpy(state, line, 2);
 	state[3]= '\0';
+	newNode->state = strdup(state);	
+	
 	//get the city
 	strncpy(city, &line[9], 62);
 	city[63]= '\0';
 	trimCity(city);
+	newNode->city = strdup(city);
+		
 	//get latitude
 	strncpy(locationtemp, &line[143], 9);
 	lat = atof(locationtemp);
-
+	newNode->lat = lat;
+	
 	//get longitude
-		strncpy(locationtemp, &line[153], 9);
-		lon = atof(locationtemp);
-
-		printf("state: %s, city: %s, lat: %f lon: %f \n", state,city,lat,lon);
+	strncpy(locationtemp, &line[153], 9);
+	lon = atof(locationtemp);
+	newNode->lon = lon;
+	
+	// Print the info in the node.	
+	printf("state: %s, city: %s, lat: %f lon: %f \n", newNode->state,newNode->city,newNode->lat,newNode->lon);
 	}
 
-
+	// Close the file
 	fclose(fp);
 }
 
@@ -74,6 +84,8 @@ while(1){
 int
 main (int argc, char *argv[])
 {
-readFile();
-exit(0);
+	//struct Placenode* head = (struct Placenode*)malloc(sizeof(struct Placenode));
+	
+	readFile();
+	exit(0);
 }
