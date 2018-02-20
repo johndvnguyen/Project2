@@ -38,7 +38,107 @@ struct Trie* createTrieNode() {
 	return node;
 }
 
+<<<<<<< HEAD
+char* prepString(char* city, char* state) {
+	
+	//char * place;
+	static char place[50];
+	//char *city;
+	//int i = 1;
+	int j = 0;
+	int count = 0;
+	int n;
+	
+	// Concatenate state and city
+	strcpy(place, state);
+	strcat(place, city);
+	
+	// Make all characters lowercase
+	while(place[j]) {
+		place[j] = tolower(place[j]);
+		j++;
+	}
+
+	// Get rid of all spaces
+	for(n = 0; n < strlen(place); ++n) {
+		if (place[n] != ' ')
+			place[count++] = place[n];
+	}
+
+	place[count] = '\0';
+	printf("Searched for: %s\n", place);
+	return &place[0];
+
+}
+
+struct Placenode* search(struct Trie* head, char* city, char* state) {
+
+	struct Placenode* node = (struct Placenode*)malloc(sizeof(struct Placenode));
+	if(head == NULL)
+		return node;
+	char *str;
+	str = prepString(city, state);
+=======
 struct Placenode* search(struct Trie* head, char* str) {
+
+	struct Placenode* node;// = (struct Placenode*)malloc(sizeof(struct Placenode));
+	if(head == NULL)
+		return node;
+
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
+	struct Trie* curr = head;
+	while (*str) { 
+		curr = curr->character[*str - 'a'];
+
+		if (curr == NULL)
+			return node;
+
+		str++;
+	}
+<<<<<<< HEAD
+
+	int childCount = 0; 
+	childCount = countChildren(curr);
+	printf("Child count:%i\n", childCount);
+	if(childCount > 1) {
+		printf("Too Many Children\n");
+		return node;
+	} else {
+		while(!curr->isLeaf) {
+			int c = getChild(curr);
+			curr = curr->character[c - 'a'];		
+		}
+	}
+	//printf("\n*Finished Search*\n");	
+	//printf("%s\n", curr->place->city);
+	// Return
+	return curr->place;
+}
+int getChild(struct Trie* curr) {
+	int i;
+	for (i = 0; i < CHAR_SIZE; i++) {
+		if (curr->character[i])
+			return i + 97;
+	}
+	return 0;
+}
+
+int countChildren(struct Trie* curr) {
+	int i = 0;
+	int count = 0;
+
+	while(i < CHAR_SIZE) {
+		if (curr->character[i]){
+			printf("%c %d\n", i+97, i+97);
+			count++;
+		}
+		
+		i++;
+	}
+	return count;
+}
+
+/*struct Placenode* search(struct Trie* head, char* str) {
 
 	struct Placenode* node;// = (struct Placenode*)malloc(sizeof(struct Placenode));
 	if(head == NULL)
@@ -50,6 +150,12 @@ struct Placenode* search(struct Trie* head, char* str) {
 
 		if (curr == NULL)
 			return node;
+=======
+	
+	// Return
+	return curr->place;
+}
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
 
 		str++;
 	}
@@ -57,7 +163,7 @@ struct Placenode* search(struct Trie* head, char* str) {
 	// Return
 	return curr->place;
 }
-
+*/
 void trimCity(char *city){
 	//printf("this is the city %s \n", city);
 	char *pos = strstr(city,"  ");
@@ -95,6 +201,30 @@ void insertPlace(struct Trie* *head, struct Placenode * node) {
 		j++;
 	}
 
+<<<<<<< HEAD
+void insertPlace(struct Trie* *head, struct Placenode * node) {
+	// Start from root
+	struct Trie* curr = *head;
+	char place[50];
+	char *city;
+	int i = 1;
+	int j = 0;
+	int count = 0;
+	int n;
+	city = node->city;
+	
+	// Concatenate state and city
+	strcpy(place, node->state);
+	strcat(place, node->city);
+	
+	// Make all characters lowercase
+	while(place[j]) {
+		place[j] = tolower(place[j]);
+		j++;
+	}
+
+=======
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
 	// Get rid of all spaces
 	for(n = 0; n < strlen(place); ++n) {
 		if (place[n] != ' ')
@@ -139,6 +269,11 @@ void insertPlace(struct Trie* *head, struct Placenode * node) {
 	//printf("Inserted");
 }
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
 struct Trie * readFile(){
 FILE * fp;
 fp = fopen("./places2k.txt","r");
@@ -211,6 +346,11 @@ while(1){
 int
 main (int argc, char *argv[])
 {
+<<<<<<< HEAD
+	char* city = "Seattle";
+	char* state = "WA";
+=======
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
 	// Place node to hold return of search
 	struct Placenode* place = 
 	(struct Placenode*)malloc(sizeof(struct Placenode));
@@ -222,10 +362,18 @@ main (int argc, char *argv[])
 	trie = readFile();
 
 	// Search
+<<<<<<< HEAD
+	place = search(trie, city, state);
+	//place = search(trie, "pryaurel");
+	// Print Message
+	if(place->lon == 0) {
+		printf("NOT FOUND or too vague\n");
+=======
 	place = search(trie, "pryaurel");
 	// Print Message
 	if(place->city == NULL) {
 		printf("NOT FOUND");
+>>>>>>> 2b3831cdcd688b6cf5e629043835cb88f9e2912e
 	} else {
 		printf("%s, %s: %f, %f\n",
 		place->city,place->state,place->lat,place->lon);
