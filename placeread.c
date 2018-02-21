@@ -41,6 +41,7 @@ struct Trie* createTrieNode() {
 char* prepString(char* city, char* state) {
 	
 	static char place[50];
+
 	int j = 0;
 	int count = 0;
 	int n;
@@ -64,6 +65,7 @@ char* prepString(char* city, char* state) {
 	// Insert escape sequence
 	place[count] = '\0';
 	//printf("Searched for: %s\n", place);
+
 	return &place[0];
 
 }
@@ -79,7 +81,6 @@ struct Placenode* search(struct Trie* head, char* city, char* state) {
 	while (*str) { 
 		curr = curr->character[*str - 'a'];
 		//curr = curr->character[*str];
-		
 
 		if (curr == NULL)
 			return node;
@@ -134,6 +135,7 @@ int countChildren(struct Trie* curr) {
 			}
 			count++;
 		}
+
 		i++;
 	}
 	return count;
@@ -195,6 +197,7 @@ void insertPlace(struct Trie* *head, struct Placenode * node) {
 		// Create a new node if path doesn't exist
 		if (curr->character[*place - 'a'] == NULL) {	
 			curr->character[*place - 'a'] = createTrieNode();
+
 		}
 		// Go to next node
 		curr = curr->character[*place - 'a'];
@@ -209,8 +212,6 @@ void insertPlace(struct Trie* *head, struct Placenode * node) {
 	//printf("Inserted");
 	return;
 }
-
-
 
 struct Trie * readFile(){
 FILE * fp;
@@ -253,7 +254,6 @@ while(1){
 	lon = atof(locationtemp);
 	newNode->lon = lon;
 	//printf("\nHere");	
-	
 
 	// Insert Place into Trie
 	insertPlace(&head, newNode);	
@@ -261,7 +261,7 @@ while(1){
 	// Print the info in the node.	
 	printf("state: %s, city: %s, lat: %f lon: %f \n", 
 		newNode->state,newNode->city,newNode->lat,newNode->lon);
-	
+
 	}
 	
 	/*// Create a struct to hold return of search
@@ -289,6 +289,7 @@ main (int argc, char *argv[])
 {
 	char* city = "Ran";
 	char* state = "WY";
+
 	// Place node to hold return of search
 	struct Placenode* place = 
 	(struct Placenode*)malloc(sizeof(struct Placenode));
