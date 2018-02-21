@@ -3,7 +3,7 @@
  * It was generated using rpcgen.
  */
 
-#include "place.h"
+#include "send_place.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <rpc/pmap_clnt.h>
@@ -11,13 +11,13 @@
 #include <memory.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "coord_client.h"
+#include "send_coord_client.h"
 
 #ifndef SIG_PF
 #define SIG_PF void(*)(int)
 #endif
 
-extern void send_coord_prog_1(char *host);
+static char *airport_host;
 
 static void
 send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
@@ -36,7 +36,7 @@ send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 
 	case PLACE:
 		_xdr_argument = (xdrproc_t) xdr_placename;
-		_xdr_result = (xdrproc_t) xdr_readdir_ret;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *)) place_1_svc;
 		break;
 
@@ -57,29 +57,23 @@ send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		fprintf (stderr, "%s", "unable to free arguments");
 		exit (1);
 	}
+	//send_coord_prog_1 (airport_host);
 	return;
 }
 
 int
 main (int argc, char **argv)
 {
-	//from coordClient
-	printf("starting place_server\n");
-	char *host;
-	
+	//static char *airport_host;
+	printf("GrabbingHost\n");
 	if (argc < 2) {
 		printf ("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}
+	airport_host = argv[1];
+	//send_coord_prog_1 (airport_host);
+	printf("send to CoordClient.c \n");
 	
-	host = argv[1];
-	
-	printf("using host: %s \n",host);
-	send_coord_prog_1 (host);
-	printf("host sent: %s \n",host);
-
-	// original file below
-	printf("starting place_server");
 	register SVCXPRT *transp;
 
 	pmap_unset (SEND_PLACE_PROG, SEND_PLACE_VERS);

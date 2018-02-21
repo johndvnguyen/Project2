@@ -3,7 +3,7 @@
  * It was generated using rpcgen.
  */
 
-#include "place.h"
+#include "send_coord.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <rpc/pmap_clnt.h>
@@ -11,19 +11,16 @@
 #include <memory.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "coord_client.h"
 
 #ifndef SIG_PF
 #define SIG_PF void(*)(int)
 #endif
 
-extern void send_coord_prog_1(char *host);
-
 static void
-send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
+send_coord_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		placename place_1_arg;
+		float coord_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -34,10 +31,10 @@ send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		(void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *)NULL);
 		return;
 
-	case PLACE:
-		_xdr_argument = (xdrproc_t) xdr_placename;
-		_xdr_result = (xdrproc_t) xdr_readdir_ret;
-		local = (char *(*)(char *, struct svc_req *)) place_1_svc;
+	case COORD:
+		_xdr_argument = (xdrproc_t) xdr_float;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
+		local = (char *(*)(char *, struct svc_req *)) coord_1_svc;
 		break;
 
 	default:
@@ -63,34 +60,17 @@ send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 int
 main (int argc, char **argv)
 {
-	//from coordClient
-	printf("starting place_server\n");
-	char *host;
-	
-	if (argc < 2) {
-		printf ("usage: %s server_host\n", argv[0]);
-		exit (1);
-	}
-	
-	host = argv[1];
-	
-	printf("using host: %s \n",host);
-	send_coord_prog_1 (host);
-	printf("host sent: %s \n",host);
-
-	// original file below
-	printf("starting place_server");
 	register SVCXPRT *transp;
 
-	pmap_unset (SEND_PLACE_PROG, SEND_PLACE_VERS);
+	pmap_unset (SEND_COORD_PROG, SEND_COORD_VERS);
 
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, SEND_PLACE_PROG, SEND_PLACE_VERS, send_place_prog_1, IPPROTO_UDP)) {
-		fprintf (stderr, "%s", "unable to register (SEND_PLACE_PROG, SEND_PLACE_VERS, udp).");
+	if (!svc_register(transp, SEND_COORD_PROG, SEND_COORD_VERS, send_coord_prog_1, IPPROTO_UDP)) {
+		fprintf (stderr, "%s", "unable to register (SEND_COORD_PROG, SEND_COORD_VERS, udp).");
 		exit(1);
 	}
 
@@ -99,8 +79,8 @@ main (int argc, char **argv)
 		fprintf (stderr, "%s", "cannot create tcp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, SEND_PLACE_PROG, SEND_PLACE_VERS, send_place_prog_1, IPPROTO_TCP)) {
-		fprintf (stderr, "%s", "unable to register (SEND_PLACE_PROG, SEND_PLACE_VERS, tcp).");
+	if (!svc_register(transp, SEND_COORD_PROG, SEND_COORD_VERS, send_coord_prog_1, IPPROTO_TCP)) {
+		fprintf (stderr, "%s", "unable to register (SEND_COORD_PROG, SEND_COORD_VERS, tcp).");
 		exit(1);
 	}
 

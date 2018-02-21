@@ -3,8 +3,8 @@
  * It was generated using rpcgen.
  */
 
-#ifndef _PLACE_H_RPCGEN
-#define _PLACE_H_RPCGEN
+#ifndef _COORD_H_RPCGEN
+#define _COORD_H_RPCGEN
 
 #include <rpc/rpc.h>
 
@@ -19,7 +19,7 @@ typedef float latitude;
 
 typedef float longitude;
 
-typedef char *placename;
+typedef char *placeName;
 
 typedef struct airportNode *airportList;
 
@@ -33,7 +33,7 @@ typedef struct searchedCity searchedCity;
 
 struct airportNode {
 	char *code;
-	placename name;
+	placeName name;
 	char *state;
 	float distance;
 	airportList next;
@@ -54,20 +54,20 @@ struct readdir_ret {
 };
 typedef struct readdir_ret readdir_ret;
 
-#define SEND_PLACE_PROG 0x33112218
-#define SEND_PLACE_VERS 1
+#define SEND_COORD_PROG 0x33112217
+#define SEND_COORD_VERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define PLACE 1
-extern  readdir_ret * place_1(placename *, CLIENT *);
-extern  readdir_ret * place_1_svc(placename *, struct svc_req *);
-extern int send_place_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+#define COORD 1
+extern  airportList * coord_1(searchedCity *, CLIENT *);
+extern  airportList * coord_1_svc(searchedCity *, struct svc_req *);
+extern int send_coord_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
-#define PLACE 1
-extern  readdir_ret * place_1();
-extern  readdir_ret * place_1_svc();
-extern int send_place_prog_1_freeresult ();
+#define COORD 1
+extern  airportList * coord_1();
+extern  airportList * coord_1_svc();
+extern int send_coord_prog_1_freeresult ();
 #endif /* K&R C */
 
 /* the xdr functions */
@@ -75,7 +75,7 @@ extern int send_place_prog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_latitude (XDR *, latitude*);
 extern  bool_t xdr_longitude (XDR *, longitude*);
-extern  bool_t xdr_placename (XDR *, placename*);
+extern  bool_t xdr_placeName (XDR *, placeName*);
 extern  bool_t xdr_airportList (XDR *, airportList*);
 extern  bool_t xdr_searchedCity (XDR *, searchedCity*);
 extern  bool_t xdr_airportNode (XDR *, airportNode*);
@@ -85,7 +85,7 @@ extern  bool_t xdr_readdir_ret (XDR *, readdir_ret*);
 #else /* K&R C */
 extern bool_t xdr_latitude ();
 extern bool_t xdr_longitude ();
-extern bool_t xdr_placename ();
+extern bool_t xdr_placeName ();
 extern bool_t xdr_airportList ();
 extern bool_t xdr_searchedCity ();
 extern bool_t xdr_airportNode ();
@@ -98,4 +98,4 @@ extern bool_t xdr_readdir_ret ();
 }
 #endif
 
-#endif /* !_PLACE_H_RPCGEN */
+#endif /* !_COORD_H_RPCGEN */
