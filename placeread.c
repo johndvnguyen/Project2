@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CHAR_SIZE 26
+
 typedef float latitude;
 
 typedef float longitude;
@@ -16,6 +18,126 @@ struct Placenode {
 	longitude lon;
 };
 
+// Trie struct
+struct Trie {
+	int isLeaf;
+	struct Placenode* place;
+	struct Trie* character[CHAR_SIZE];
+};
+
+// Create Trie Node
+struct Trie* createTrieNode() {
+	struct Trie* node = (struct Trie*)malloc(sizeof(struct Trie));
+	int i;
+	
+	node->isLeaf = 0;
+
+	for (i = 0; i < CHAR_SIZE; i++)
+		node->character[i] = NULL;
+
+	return node;
+}
+
+char* prepString(char* city, char* state) {
+	
+	static char place[50];
+	int j = 0;
+	int count = 0;
+	int n;
+	
+	// Concatenate state and city
+	strcpy(place, state);
+	strcat(place, city);
+	
+	// Make all characters lowercase
+	while(place[j]) {
+		place[j] = tolower(place[j]);
+		j++;
+	}
+	
+	// Keep only alphabetic characters
+	for (n = 0; n < strlen(place); ++n) {
+		if(isalpha((place[n])))
+			place[count++] = place[n];	
+	}
+
+	// Insert escape sequence
+	place[count] = '\0';
+	//printf("Searched for: %s\n", place);
+	return &place[0];
+
+}
+
+struct Placenode* search(struct Trie* head, char* city, char* state) {
+
+	struct Placenode* node = (struct Placenode*)malloc(sizeof(struct Placenode));
+	if(head == NULL)
+		return node;
+	char *str;
+	str = prepString(city, state);
+	struct Trie* curr = head;
+	while (*str) { 
+		curr = curr->character[*str - 'a'];
+		//curr = curr->character[*str];
+		
+
+		if (curr == NULL)
+			return node;
+
+		str++;
+	}
+
+	int childCount = 0;
+	 
+	printf("Child count:%i\n", childCount);
+	while(!curr->isLeaf) {
+		childCount = countChildren(curr);
+		printf("Child count:%i\n", childCount);
+		
+		if(childCount ==  1) {
+			int c = getChild(curr);
+			//curr = curr->character[c];			
+			curr = curr->character[c - 'a'];			
+		} else {
+		printf("Too Many Children\n");
+		return node;
+		}
+		childCount = 0;
+	}
+	
+	//printf("\n*Finished Search*\n");	
+	//printf("%s\n", curr->place->city);
+	// Return
+	return curr->place;
+}
+int getChild(struct Trie* curr) {
+	int i;
+	for (i = 0; i < CHAR_SIZE; i++) {
+		if (curr->character[i])
+			//return i;
+			return i + 97;
+	}
+	return 0;
+}
+
+int countChildren(struct Trie* curr) {
+	int i = 0;
+	int count = 0;
+
+	while(i < CHAR_SIZE) {
+		if (curr->character[i]){
+			if (i <=97) {
+				//printf("%c %d\n", i, i);
+				printf("%c %d\n", i+97, i+97);
+			} else {
+				printf("%c %d\n", i, i);
+			}
+			count++;
+		}
+		i++;
+	}
+	return count;
+}
 
 void trimCity(char *city){
 	//printf("this is the city %s \n", city);
@@ -34,7 +156,63 @@ void trimCity(char *city){
 }
 
 
-void readFile(){
+void insertPlace(struct Trie* *head, struct Placenode * node) {
+	// Start from root
+	struct Trie* curr = *head;
+	//char place[50];
+	char *place;
+	char *city;
+	int i = 1;
+	int j = 0;
+	int count = 0;
+	int n;
+	city = node->city;
+
+	place = prepString(node->city, node->state);
+	
+	//printf("%s\n", place);
+	//printf("String length: %i\n", strlen(place));
+	/*for(n = 0; n < strlen(place); ++n) {
+		printf("N = %i  ", n);
+		printf("Char = %c, %i\n", place[n], place[n]);
+		//if(curr->character[place[n]] == NULL) {
+
+		if(curr->character[place[n] - 'a'] == NULL) {
+			//printf("%c Create new Node\n", place[n]);
+			//curr->character[place[n]] = createTrieNode();
+			curr->character[place[n] - 'a'] = createTrieNode();
+
+		}
+		// Go to next node
+		//curr = curr->character[place[n]];
+
+		curr = curr->character[place[n] - 'a'];
+
+	}
+	*/
+	while (*place) {
+	
+		// Create a new node if path doesn't exist
+		if (curr->character[*place - 'a'] == NULL) {	
+			curr->character[*place - 'a'] = createTrieNode();
+		}
+		// Go to next node
+		curr = curr->character[*place - 'a'];
+
+		// Move to next character
+		*place++;
+	}
+
+	// Mark current node as leaf
+	curr->isLeaf = 1;
+	curr->place = node;
+	//printf("Inserted");
+	return;
+}
+
+
+
+struct Trie * readFile(){
 FILE * fp;
 fp = fopen("./places2k.txt","r");
 char line[255];
@@ -43,14 +221,16 @@ char city[63];
 char locationtemp[9];
 latitude lat;
 longitude lon;
-//placeNode * start = head;
+struct Trie* head = createTrieNode();	
+int i = 0;
 
+// Read each line of file and enter into trie
 while(1){
-	struct Placenode * newNode = (struct Placenode*)malloc(sizeof(struct Placenode));
-	//check node was created successfully if fail
-	
+	// Create place node to enter data into trie
+	struct Placenode * newNode =
+	(struct Placenode*)malloc(sizeof(struct Placenode));
+
 	if (fgets(line,200,fp)==NULL) break;
-	
 	//get the state
 	strncpy(state, line, 2);
 	state[3]= '\0';
@@ -60,6 +240,7 @@ while(1){
 	strncpy(city, &line[9], 62);
 	city[63]= '\0';
 	trimCity(city);
+	//printf("CITY:%s\n", city);
 	newNode->city = strdup(city);
 		
 	//get latitude
@@ -71,21 +252,63 @@ while(1){
 	strncpy(locationtemp, &line[153], 9);
 	lon = atof(locationtemp);
 	newNode->lon = lon;
+	//printf("\nHere");	
+	
+
+	// Insert Place into Trie
+	insertPlace(&head, newNode);	
 	
 	// Print the info in the node.	
-	printf("state: %s, city: %s, lat: %f lon: %f \n", newNode->state,newNode->city,newNode->lat,newNode->lon);
+	printf("state: %s, city: %s, lat: %f lon: %f \n", 
+		newNode->state,newNode->city,newNode->lat,newNode->lon);
+	
 	}
-
-	// Close the file
+	
+	/*// Create a struct to hold return of search
+	struct Placenode * place = 
+	(struct Placenode*)malloc(sizeof(struct Placenode));
+	
+	// Search
+	place = search(head, "ryaurel");
+	
+	// Print Message
+	if(place->city == NULL) {
+		printf("NOT FOUND");
+	} else {
+		printf("%f\n", place->lon);
+	}
+	*/
+// Close the file
 	fclose(fp);
+	return head;
 }
 
 
 int
 main (int argc, char *argv[])
 {
-	//struct Placenode* head = (struct Placenode*)malloc(sizeof(struct Placenode));
-	
-	readFile();
+	char* city = "Ran";
+	char* state = "WY";
+	// Place node to hold return of search
+	struct Placenode* place = 
+	(struct Placenode*)malloc(sizeof(struct Placenode));
+
+	// Trie to hold return of trie
+	struct Trie* trie = (struct Trie*)malloc(sizeof(struct Trie));
+
+	// Read file into trie	
+	trie = readFile();
+
+	// Search
+	place = search(trie, city, state);
+	//place = search(trie, "pryaurel");
+	// Print Message
+	if(place->lon == 0) {
+		printf("NOT FOUND or too vague\n");
+	} else {
+		printf("%s, %s: %f, %f\n",
+		place->city,place->state,place->lat,place->lon);
+	}
+		
 	exit(0);
 }
