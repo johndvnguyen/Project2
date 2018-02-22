@@ -156,13 +156,14 @@ struct kdNode * readFile(char * path){
 				lat = atof(token);
 				//Longitude
 				printf ("4 %s\n",token);
-				token= strtok(NULL, " " );
+				//token= strtok(NULL, " " );
 				lon = atof(token);
 				//City
 
-				printf("airport_code: %s, lat: %f, long: %f, city: %s \n",airport_code,lat,lon,city);
+				//printf("airport_code: %s, lat: %f, long: %f, city: %s \n",airport_code,lat,lon,city);
 				//kdNode  newNode = *(createNode(lat,lon,city,airport_code));
 				struct kdNode * temp = (struct kdNode*)malloc(sizeof(struct kdNode));
+				printf("created temp node\n");
 				if (temp ==NULL)
 					printf("Error creating kdnode\n");
 				temp->dims[0] = lat;
