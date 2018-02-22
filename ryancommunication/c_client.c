@@ -5,13 +5,13 @@
  */
 
 #include "p.h"
-//extern CLIENT *clntairport;
+//CLIENT *clntairport;
 void
 send_coord_prog_1(char *host)
 {
 	airportList  *result_1;
 	searchedCity  coord_1_arg;
-	CLIENT *clntairport;
+	//CLIENT *clntairport;
 #ifndef	DEBUG
 	
 	printf("C_CLIENT.C\n");

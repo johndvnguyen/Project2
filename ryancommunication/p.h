@@ -54,9 +54,9 @@ struct readdir_ret {
 };
 typedef struct readdir_ret readdir_ret;
 
-#define SEND_PLACE_PROG 0x33337777
+#define SEND_PLACE_PROG 0x31115577
 #define SEND_PLACE_VERS 1
-#define SEND_COORD_PROG 0x33337778
+#define SEND_COORD_PROG 0x31115578
 #define SEND_COORD_VERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)

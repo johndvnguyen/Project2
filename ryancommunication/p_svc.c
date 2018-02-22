@@ -17,7 +17,7 @@
 #endif
 
 char* airport_host;
-extern CLIENT *clntairport;
+CLIENT *clntairport;
 static void
 send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
