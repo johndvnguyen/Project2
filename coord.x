@@ -35,5 +35,5 @@ program SEND_COORD_PROG{
 	version SEND_COORD_VERS {
 		airportList COORD(searchedCity) = 1;
 	} = 1;
-} = 0x33337778;
+} = 0x33112217;
 

@@ -18,13 +18,12 @@
 #endif
 char* airport_host;
 
-extern void send_coord_prog_1(char *host);
 
 static void
 send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		placename place_1_arg;
+		placeName place_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -36,7 +35,7 @@ send_place_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		return;
 
 	case PLACE:
-		_xdr_argument = (xdrproc_t) xdr_placename;
+		_xdr_argument = (xdrproc_t) xdr_placeName;
 		_xdr_result = (xdrproc_t) xdr_readdir_ret;
 		local = (char *(*)(char *, struct svc_req *)) place_1_svc;
 		break;

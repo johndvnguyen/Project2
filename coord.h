@@ -15,45 +15,6 @@ extern "C" {
 
 #define MAXLEN 255
 
-typedef float latitude;
-
-typedef float longitude;
-
-typedef char *placeName;
-
-typedef struct airportNode *airportList;
-
-struct searchedCity {
-	char *city;
-	char *state;
-	latitude lat;
-	longitude lon;
-};
-typedef struct searchedCity searchedCity;
-
-struct airportNode {
-	char *code;
-	placeName name;
-	char *state;
-	float distance;
-	airportList next;
-};
-typedef struct airportNode airportNode;
-
-struct output {
-	searchedCity cityData;
-	airportList list;
-};
-typedef struct output output;
-
-struct readdir_ret {
-	int err;
-	union {
-		output list;
-	} readdir_ret_u;
-};
-typedef struct readdir_ret readdir_ret;
-
 #define SEND_COORD_PROG 0x33112217
 #define SEND_COORD_VERS 1
 
@@ -71,26 +32,6 @@ extern int send_coord_prog_1_freeresult ();
 #endif /* K&R C */
 
 /* the xdr functions */
-
-#if defined(__STDC__) || defined(__cplusplus)
-extern  bool_t xdr_latitude (XDR *, latitude*);
-extern  bool_t xdr_longitude (XDR *, longitude*);
-extern  bool_t xdr_placeName (XDR *, placeName*);
-extern  bool_t xdr_airportList (XDR *, airportList*);
-extern  bool_t xdr_searchedCity (XDR *, searchedCity*);
-extern  bool_t xdr_airportNode (XDR *, airportNode*);
-extern  bool_t xdr_output (XDR *, output*);
-extern  bool_t xdr_readdir_ret (XDR *, readdir_ret*);
-
-#else /* K&R C */
-extern bool_t xdr_latitude ();
-extern bool_t xdr_longitude ();
-extern bool_t xdr_placeName ();
-extern bool_t xdr_airportList ();
-extern bool_t xdr_searchedCity ();
-extern bool_t xdr_airportNode ();
-extern bool_t xdr_output ();
-extern bool_t xdr_readdir_ret ();
 
 #endif /* K&R C */
 

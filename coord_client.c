@@ -11,18 +11,17 @@
 void
 send_coord_prog_1(char *host)
 {	
-	printf("reached the send_coord_prog_1 \n");
+	printf("reached  the send_coord_prog_1 \n");
 	CLIENT *clnt;
 	airportList  *result_1;
 	searchedCity  coord_1_arg;
 	//Test Code
-	searchedCity thisCity;
-	thisCity.city="city";
-	thisCity.state="state";
-	thisCity.lat=100;
-	thisCity.lon=100;
-
-	coord_1_arg = thisCity;
+	coord_1_arg.city="city";
+	coord_1_arg.state="state";
+	coord_1_arg.lat=100;
+	coord_1_arg.lon=100;
+	
+	
 #ifndef	DEBUG
 	clnt = clnt_create (host, SEND_COORD_PROG, SEND_COORD_VERS, "udp");
 	if (clnt == NULL) {

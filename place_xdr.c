@@ -26,7 +26,7 @@ xdr_longitude (XDR *xdrs, longitude *objp)
 }
 
 bool_t
-xdr_placename (XDR *xdrs, placename *objp)
+xdr_placeName (XDR *xdrs, placeName *objp)
 {
 	register int32_t *buf;
 
@@ -68,7 +68,7 @@ xdr_airportNode (XDR *xdrs, airportNode *objp)
 
 	 if (!xdr_string (xdrs, &objp->code, 3))
 		 return FALSE;
-	 if (!xdr_placename (xdrs, &objp->name))
+	 if (!xdr_placeName (xdrs, &objp->name))
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->state, 2))
 		 return FALSE;

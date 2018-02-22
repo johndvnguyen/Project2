@@ -1,7 +1,7 @@
 const MAXLEN = 255;
 typedef float latitude;
 typedef float longitude;
-typedef string placename<MAXLEN>;
+typedef string placeName<MAXLEN>;
 typedef struct airportNode* airportList;
 
 struct searchedCity {
@@ -13,7 +13,7 @@ struct searchedCity {
 
 struct airportNode {
 	string code<3>;
-	placename name;
+	placeName name;
 	string state<2>;
 	float distance;
 	airportList next;
@@ -35,6 +35,6 @@ program SEND_PLACE_PROG{
 	version SEND_PLACE_VERS {
 		readdir_ret PLACE(placename) = 1;
 	} = 1;
-} = 0x33337777;
+} = 0x33112218;
 
 

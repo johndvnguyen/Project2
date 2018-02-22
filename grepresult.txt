@@ -1,0 +1,17 @@
+./place.x:4:typedef string placename<MAXLEN>;
+./place.x:16:	placename name;
+./place.x:36:		readdir_ret PLACE(placename) = 1;
+./SimpleExample/send_place.h:18:typedef char *placename;
+./SimpleExample/send_place.h:25:extern  char ** place_1(placename *, CLIENT *);
+./SimpleExample/send_place.h:26:extern  char ** place_1_svc(placename *, struct svc_req *);
+./SimpleExample/send_place.h:39:extern  bool_t xdr_placename (XDR *, placename*);
+./SimpleExample/send_place_client.c:15:	placename  place_1_arg = "there is a place";
+Binary file ./SimpleExample/send_place_client.o matches
+./SimpleExample/send_place_clnt.c:13:place_1(placename *argp, CLIENT *clnt)
+Binary file ./SimpleExample/send_place_clnt.o matches
+./SimpleExample/send_place_server.c:14:place_1_svc(placename *argp, struct svc_req *rqstp)
+Binary file ./SimpleExample/send_place_server.o matches
+./SimpleExample/send_place_svc.c:26:		placename place_1_arg;
+Binary file ./SimpleExample/send_place_svc.o matches
+./SimpleExample/send_place_xdr.c:9:xdr_placename (XDR *xdrs, placename *objp)
+Binary file ./SimpleExample/send_place_xdr.o matches

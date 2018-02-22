@@ -11,7 +11,7 @@
 extern char * airport_host;
 
 readdir_ret *
-place_1_svc(placename *argp, struct svc_req *rqstp)
+place_1_svc(placeName *argp, struct svc_req *rqstp)
 {
 	static readdir_ret  result;
 	result.err = 0;
@@ -24,6 +24,7 @@ place_1_svc(placename *argp, struct svc_req *rqstp)
 	 */
 	//make call to airport client
 	printf("using host: %s \n",airport_host);
+	coord_1(searchedCity *argp, CLIENT *clnt)
 	send_coord_prog_1 (airport_host);
 	printf("host sent: %s \n",airport_host);
 	
