@@ -6,6 +6,10 @@
 
 #include "place.h"
 #include <errno.h>
+#include "coord_client.h"
+
+extern char * airport_host;
+
 readdir_ret *
 place_1_svc(placename *argp, struct svc_req *rqstp)
 {
@@ -18,6 +22,10 @@ place_1_svc(placename *argp, struct svc_req *rqstp)
 	/*
 	 * insert server code here
 	 */
-
+	//make call to airport client
+	printf("using host: %s \n",airport_host);
+	send_coord_prog_1 (airport_host);
+	printf("host sent: %s \n",airport_host);
+	
 	return &result;
 }

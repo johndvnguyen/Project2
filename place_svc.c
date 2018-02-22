@@ -16,6 +16,7 @@
 #ifndef SIG_PF
 #define SIG_PF void(*)(int)
 #endif
+char* airport_host;
 
 extern void send_coord_prog_1(char *host);
 
@@ -65,18 +66,15 @@ main (int argc, char **argv)
 {
 	//from coordClient
 	printf("starting place_server\n");
-	char *host;
+	//char *host;
 	
 	if (argc < 2) {
 		printf ("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}
 	
-	host = argv[1];
+	airport_host = argv[1];
 	
-	printf("using host: %s \n",host);
-	send_coord_prog_1 (host);
-	printf("host sent: %s \n",host);
 
 	// original file below
 	printf("starting place_server");

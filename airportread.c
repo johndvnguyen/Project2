@@ -104,7 +104,7 @@ int getLineCount(char * path){
 
 struct kdNode * readFile(char * path){
 	int lineCount = getLineCount(path);
-	kdNode nodeArray[lineCount];
+	kdNode * nodeArray[lineCount];
 	int nodeCount = 0;
 
 	FILE * fp;
@@ -112,7 +112,7 @@ struct kdNode * readFile(char * path){
 	char line[255];
 	char airport_code[4];
 	char city[100];
-	char locationtemp[9];
+	char * locationtemp;
 	latitude lat;
 	longitude lon;
 	char * token;
@@ -132,37 +132,52 @@ struct kdNode * readFile(char * path){
 		if (fgets(line,200,fp)==NULL) break;
 			//check for empty lines
 			if(line[0] != '\n'){
+				//split line by tab first
+				token= strtok(line, "	" ); 
+				locationtemp=token;
+
+
+				token= strtok(NULL, "	" );
+				strcpy(city,token);
+				printf ("1 %s",city);
+
 				//Start the string token to start of string
-				token= strtok(line, " 	" ); 
+				token= strtok(locationtemp, " " ); 
 				strncpy(airport_code,&token[1],3);
 				airport_code[3]='\0';
 				//Airport code
 				printf ("2 %s\n",token);
-				token= strtok(NULL, " 	" );
+				token= strtok(NULL, " " );
 				
 				
 				//Latitude
 				printf ("3 %s\n",token);
-				token= strtok(NULL, " 	" );
+				token= strtok(NULL, " " );
 				lat = atof(token);
 				//Longitude
 				printf ("4 %s\n",token);
-				token= strtok(NULL, " 	" );
+				token= strtok(NULL, " " );
 				lon = atof(token);
 				//City
-				printf ("5 %s\n",token);
-				strcpy(city,token);
 
 				printf("airport_code: %s, lat: %f, long: %f, city: %s \n",airport_code,lat,lon,city);
-				kdNode  newNode = *(createNode(lat,lon,city,airport_code));
-				
+				//kdNode  newNode = *(createNode(lat,lon,city,airport_code));
+				struct kdNode * temp = (struct kdNode*)malloc(sizeof(struct kdNode));
+				if (temp ==NULL)
+					printf("Error creating kdnode\n");
+				temp->dims[0] = lat;
+				temp->dims[1] = lon;
+				temp->city = city;
+				temp->airport_code = airport_code;
+				temp->left = temp->right = NULL;
+				//printf("kdnode filled\n");
 				//Add the node to an array
 				if (nodeCount <= lineCount){
-					printf("adding node to array airport_code: %s, city: %s \n",newNode.airport_code,newNode.city);
-					nodeArray[nodeCount] = 	newNode;
-					printf("node %d created: airport_code: %s \n", nodeCount,nodeArray[nodeCount].airport_code);
+					printf("adding node to array airport_code: %s, city: %s \n",temp->airport_code,temp->city);
+					nodeArray[nodeCount] = 	temp;
+					printf("node %d created: airport_code: %s \n", nodeCount,nodeArray[nodeCount]->airport_code);
 					if (nodeCount>1) 
-						printf("node previous %d: airport_code: %s \n", nodeCount-1,nodeArray[nodeCount-1].airport_code);
+						printf("node previous %d: airport_code: %s \n", nodeCount-1,nodeArray[nodeCount-1]->airport_code);
 					nodeCount++;
 				}
 				else
@@ -183,9 +198,9 @@ struct kdNode * readFile(char * path){
 		printf("There are %d lines in this file \n",lineCount);
 		printf("%d nodes created \n",nodeCount);
 		
-		printf("airport_code: %s, city: %s \n",nodeArray[1].airport_code,nodeArray[1].city);
-		printf("airport_code: %s, city: %s \n",nodeArray[22].airport_code,nodeArray[22].city);
-		kdNode * temp = make_tree(&nodeArray[0], nodeCount,0,2);
+		printf("airport_code: %s, city: %s \n",nodeArray[1]->airport_code,nodeArray[1]->city);
+		printf("airport_code: %s, city: %s \n",nodeArray[22]->airport_code,nodeArray[22]->city);
+		kdNode * temp = make_tree(nodeArray[0], nodeCount,0,2);
 		printf("airport_code: %s, city: %s \n",temp->airport_code,temp->city);
 		return temp;
 }
@@ -227,7 +242,7 @@ struct kdNode * find_median(struct kdNode *start, struct kdNode *end, int idx)
 struct kdNode * make_tree(struct kdNode *t, int len, int i, int dim)
 {
     struct kdNode *n;
- 	//printf("The Tree Grows \n");
+ 	printf("The Tree Grows \n");
     if (!len) return 0;
  
     if ((n = find_median(t, t + len, i))) {
@@ -239,17 +254,15 @@ struct kdNode * make_tree(struct kdNode *t, int len, int i, int dim)
     return n;
 }
 
-void nearest(struct kd_node_t *root, struct kd_node_t *nd, int i, int dim,
-        struct kd_node_t **best, double *best_dist)
+void nearest(struct kdNode *root, struct kdNode *nd, int i, int dim,
+        struct kdNode **best, double *best_dist)
 {
     double d, dx, dx2;
  
     if (!root) return;
-    d = dist(root.dim[0], nd.dim[0], root.dim[1],nd.dim[1], dim);
-    dx = root->x[i] - nd->x[i];
+    d = distance(root->dims[0], nd->dims[0], root->dims[1], nd->dims[1], 'M');
+    dx = root->dims[i] - nd->dims[i];
     dx2 = dx * dx;
- 
-    visited ++;
  
     if (!*best || d < *best_dist) {
         *best_dist = d;
@@ -266,7 +279,6 @@ void nearest(struct kd_node_t *root, struct kd_node_t *nd, int i, int dim,
     nearest(dx > 0 ? root->right : root->left, nd, i, dim, best, best_dist);
 }
 
-double distance(double lat1, double lon1, double lat2, double lon2, char unit) {
 
 int
 main (int argc, char *argv[])
